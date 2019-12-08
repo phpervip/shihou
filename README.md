@@ -1,4 +1,12 @@
-#beauty2.yyii.info
+beauty2.yyii.info
+===============
+
+CLTPHP6.0
+===============
+CLTPHP6.0内容管理系统：
+ + 升级TP框架到TP5.1.19
+
+
 CLTPHP5.8
 ===============
 CLTPHP5.8内容管理系统
