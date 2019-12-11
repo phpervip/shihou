@@ -161,9 +161,9 @@ return [
     ],
     'pageSize'=>15,
     //自定义配置
-    'sys_name' =>'CLTPHP',
+    'sys_name' =>'BEAUTY',
     //文件上传
     'addwater'=>false,
-    'watertext'=>'CLTPHP',
+    'watertext'=>'BEAUTY',
     'version'=>'6.0'
 ];

@@ -36,9 +36,10 @@ return [
     'taglib_pre_load'    => 'app\common\taglib\Clt',
     'taglib_build_in'  =>  'cx,app\common\taglib\Clt',
     'tpl_replace_string'  =>  [
-        '__ADMIN__'         =>'/static/admin',
-        '__LAYUI__'         =>'/fly/layui',
+        '__ADMIN__'        =>'/static/admin',
+        '__LAYUI__'        =>'/fly/layui',
         '__HOME__'         =>'/static/home',
-        '__MOBILE__'         =>'/static/mobile',
+        '__MOBILE__'       =>'/static/mobile',
+        '__WEBURL__'       => 'http://beauty2.yyii.info'
     ]
 ];
