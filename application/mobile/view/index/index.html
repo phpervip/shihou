@@ -46,7 +46,7 @@
         <!-- Slider -->
         <div class="swiper-container testimonials">
             <div class="swiper-wrapper">
-                {tlist db='debris' id='list' limit="3"}
+                {tlist db='debris' id='list' limit="3" where="type_id 1"}
                 <div class="swiper-slide center">
                     <div class="testimonial">{$list.content|raw}</div>
                     <h6 class="m-0">{$list.title}</h6>

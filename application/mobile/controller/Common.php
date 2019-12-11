@@ -35,7 +35,7 @@ class Common extends Controller
         //广告
         $adList = cache('adList');
         if(!$adList){
-            $adList = Db::name('ad')->where(['type_id'=>1,'open'=>1])->order('sort asc')->limit('4')->select();
+            $adList = Db::name('ad')->where(['open'=>1])->order('sort asc')->limit('4')->select();
             cache('adList', $adList, 3600);
         }
         $this->assign('adList', $adList);
