@@ -43,7 +43,7 @@
                         <ul class="fly-list" id="index1_2_1_1_content" nctype="object_module_edit">
                             {volist name="$list_a" id="vo"}
                             <li class="cms-index-article-normal">
-                                <a nctype="cms_index_not_display" href="http://show.cltphp.com/info/5/44.html"
+                                <a nctype="cms_index_not_display" href="{:url('/info',[$vo.catid=>$vo.id])}"
                                    class="fly-avatar">
                                     <img src="/static/img/no_pic.png" alt="{$vo.title} ">
                                 </a>
@@ -113,8 +113,8 @@
             <div class="layui-col-md12 cms-index-module-ad1">
                 <div id="ad_content" nctype="object_module_edit">
                     <div class="img_li picture">
-                        <div class="cms-thumb"><a href="http://www.cltphp.com" target="_blank"><img
-                                src="http://show.cltphp.com/uploads/20190308/6567360287d3f812af0c611a05ce8fa2.png" alt=""
+                        <div class="cms-thumb"><a href="__WEBURL__" target="_blank"><img
+                                src="/static/home/images/banner_bar.png" alt=""
                                 class="t-img"></a></div>
                     </div>
                 </div>
