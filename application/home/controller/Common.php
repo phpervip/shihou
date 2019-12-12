@@ -67,7 +67,6 @@ class Common extends Controller
         }
         $this->assign('category',$cate);
 
-
         //友情链接
         $linkList = cache('linkList');
         if(!$linkList){
