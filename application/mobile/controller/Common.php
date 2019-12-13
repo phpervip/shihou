@@ -11,9 +11,9 @@ class Common extends Controller
 {
     public function initialize()
     {
-//        if(!isMobile()){
-//            $this->redirect('home/index/index');
-//        }
+        if(!isMobile()){
+            $this->redirect('home/index/index');
+        }
         $sys = cache('System');
         $this->assign('sys',$sys);
 
