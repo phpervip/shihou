@@ -3,6 +3,12 @@ namespace app\home\controller;
 use think\Db;
 use clt\Leftnav;
 use think\Controller;
+use app\common\model\User as userModel;
+use app\common\model\Category as categoryModel;
+use app\common\model\Field as fieldModel;
+use app\common\model\Link as linkModel;
+use app\common\model\Plugin as pluginModel;
+
 class Common extends Controller
 {
     protected $pagesize;
@@ -18,10 +24,8 @@ class Common extends Controller
         $userInfo='';
         if(session('user')){
             //用户信息
-            $userInfo =Db::name('users')->alias('u')
-                ->join('user_level ul','u.level = ul.level_id','left')
-                ->field('u.*,ul.level_name as level')
-                ->where('u.id',session('user.id'))
+            $userInfo =userModel::with('userLevel')
+                ->where('id',session('user.id'))
                 ->find();
         }
         $this->assign('userInfo',$userInfo);
@@ -34,12 +38,12 @@ class Common extends Controller
         define('ACTION_NAME',strtolower($action));
 
         //导航
-        $thisCat = Db::name('category')->where('id',input('catId'))->find();
+        $thisCat = categoryModel::where('id',input('catId'))->find();
         $this->assign('title',$thisCat['title']);
         $this->assign('keywords',$thisCat['keywords']);
         $this->assign('description',$thisCat['description']);
         //判断是否为单页面模型
-        $hasCat = Db::name('field')->where(['moduleid'=>$thisCat['moduleid'],'type'=>'catid'])->find();
+        $hasCat = fieldModel::where(['moduleid'=>$thisCat['moduleid'],'type'=>'catid'])->find();
         define('DBNAME',strtolower($thisCat['module']));
         if($hasCat){
             define('ISPAGE',0);
@@ -52,15 +56,15 @@ class Common extends Controller
             $this->assign('pid',input('catId'));
             $this->assign('ptitle',$thisCat['title']);
         }else{
-            $this->assign('ptitle',Db::name('category')->where('id',$thisCat['pid'])->value('title'));
+            $this->assign('ptitle',categoryModel::where('id',$thisCat['pid'])->value('title'));
             $this->assign('pid',$thisCat['pid']);
         }
 
         // 获取缓存数据
         $cate = cache('cate');
         if(!$cate){
-            $column_one = Db::name('category')->where([['pid','=',0],['ismenu','=',1]])->order('sort')->select();
-            $column_two = Db::name('category')->where('ismenu',1)->order('sort')->select();
+            $column_one = categoryModel::where([['pid','=',0],['ismenu','=',1]])->order('sort')->select();
+            $column_two = categoryModel::where('ismenu',1)->order('sort')->select();
             $tree = new Leftnav ();
             $cate = $tree->index_top($column_one,$column_two);
             cache('cate', $cate, 3600);
@@ -70,12 +74,12 @@ class Common extends Controller
         //友情链接
         $linkList = cache('linkList');
         if(!$linkList){
-            $linkList = Db::name('link')->where('open',1)->order('sort asc')->select();
+            $linkList = linkModel::where('open',1)->order('sort asc')->select();
             cache('linkList', $linkList, 3600);
         }
         $this->assign('linkList', $linkList);
         //畅言
-        $plugin = Db::name('plugin')->where(['code'=>'changyan'])->find();
+        $plugin = pluginModel::where(['code'=>'changyan'])->find();
         $this->changyan = unserialize($plugin['config_value']);
         $this->assign('changyan', $this->changyan);
         $this->assign('time', time());
