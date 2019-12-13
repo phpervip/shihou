@@ -17,7 +17,7 @@
             <div class="swiper-wrapper">
                 {volist name="adList" id="vo" key="i"}
                 <div class="swiper-slide">
-                    <img src="/static/mobile/img/{$i}.jpg" alt="">
+                    <img src="{$vo.pic}" alt="">
                     <div class="opacity-overlay"></div>
                     <div class="bottom center">
                         <h4 class="white-text m-0"><strong>{$vo.title}</strong></h4>
