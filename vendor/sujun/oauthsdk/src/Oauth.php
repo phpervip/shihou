@@ -124,6 +124,7 @@ abstract class Oauth
     public static function getInstance($type, $config = array(), $token = null)
     {
         $name = '\\OauthSDK\\sdk\\' . ucfirst(strtolower($type)) . 'SDK';
+
         if (self::$instance[$name]) {
             return self::$instance[$name];
         }

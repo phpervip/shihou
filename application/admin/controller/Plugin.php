@@ -25,6 +25,7 @@ class Plugin extends Common{
         }
         $this->assign('title','配置登录插件');
         $info['config'] = unserialize($info['config']);
+
         $this->assign('info',$info);
         $this->assign('config_value',unserialize($info['config_value']));
         return $this->fetch();

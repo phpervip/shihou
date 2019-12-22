@@ -42,6 +42,7 @@ class Common extends Controller
         $this->assign('title',$thisCat['title']);
         $this->assign('keywords',$thisCat['keywords']);
         $this->assign('description',$thisCat['description']);
+
         //判断是否为单页面模型
         $hasCat = fieldModel::where(['moduleid'=>$thisCat['moduleid'],'type'=>'catid'])->find();
         define('DBNAME',strtolower($thisCat['module']));

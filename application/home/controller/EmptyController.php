@@ -1,6 +1,10 @@
 <?php
 namespace app\home\controller;
-use think\Db;
+use app\common\model\Category as categoryModel;
+use app\common\model\Field as fieldModel;
+use app\common\model\Donation as donationModel;
+use app\common\model\Message as messageModel;
+
 class EmptyController extends Common{
     protected  $dao,$fields;
     public function initialize()
@@ -8,14 +12,14 @@ class EmptyController extends Common{
         parent::initialize();
     }
     public function index(){
-
+        $dbModel  = model(DBNAME);
         if(ISPAGE==1){
-            $info = Db::name(DBNAME)->where('id',input('catId'))->find();
+            $info = $dbModel::where('id',input('catId'))->find();
             $this->assign('info',$info);
             if($info['template']){
                 $template = $info['template'];
             }else{
-                $info['template'] = Db::name('category')->where('id',$info['id'])->value('template_show');
+                $info['template'] = categoryModel::where('id',$info['id'])->value('template_show');
                 $info['title_style'] = isset($info['title_style'])?$info['title_style']:'';
                 if($info['template']){
                     $template = $info['template'];
@@ -27,7 +31,7 @@ class EmptyController extends Common{
         }else{
 
             if(DBNAME=='picture'){
-                $setup = db('field')->where(['moduleid'=>3,'field'=>'group'])->value('setup');
+                $setup = fieldModel::where(['moduleid'=>3,'field'=>'group'])->value('setup');
                 $setup=is_array($setup) ? $setup: string2array($setup);
                 $options = explode("\n",$setup['options']);
                 foreach($options as $r) {
@@ -38,7 +42,7 @@ class EmptyController extends Common{
                 }
                 $this->assign('options',$optionsarr);
             }
-            $arrchildid = db('category')->where(['id'=>input('catId')])->value('arrchildid');
+            $arrchildid = categoryModel::where(['id'=>input('catId')])->value('arrchildid');
             $map = ' ';
             if($arrchildid!=input('catId')){
                 $map .= 'catid in ('.$arrchildid.')';
@@ -47,7 +51,7 @@ class EmptyController extends Common{
             }
             $map .= ' and (status = 1 or (status = 0 and createtime <'.time().'))';
             if(DBNAME=='team'){
-                $list = Db::name(DBNAME)->where($map)->order('sort asc,createtime desc')->select();
+                $list = $dbModel::where($map)->order('sort asc,createtime desc')->select();
                 foreach ($list as $k=>$v){
                     $item['title_style'] = isset($item['title_style'])?isset($item['title_style']):'';
                     if(isset($v['thumb'])){
@@ -56,14 +60,10 @@ class EmptyController extends Common{
                         $list[$k]['title_thumb'] = '/static/home/images/portfolio-thumb/p'.($k+1).'.jpg';
                     }
                 }
-
-
                 $this->assign('list',$list);
             }else{
-                $list=Db::name(DBNAME)->alias('a')
-                    ->join(config('database.prefix').'category c','a.catid = c.id','left')
+                $list=$dbModel::with('category')
                     ->where($map)
-                    ->field('a.*,c.catdir,c.catname')
                     ->order('createtime desc')
                     ->paginate($this->pagesize)
                     ->each(function($item, $key){
@@ -82,7 +82,7 @@ class EmptyController extends Common{
                 $this->assign('lists',$list['data']);
                 $this->assign('page',$page);
             }
-            $cattemplate = db('category')->where('id',input('catId'))->value('template_list');
+            $cattemplate = categoryModel::where('id',input('catId'))->value('template_list');
             $template =$cattemplate ? $cattemplate : DBNAME.'_list';
 
             return $this->fetch($template);
@@ -90,8 +90,9 @@ class EmptyController extends Common{
     }
 
     public function info(){
-        Db::name(DBNAME)->where('id',input('id'))->setInc('hits');
-        $info = Db::name(DBNAME)->where('id',input('id'))->find();
+        $dbModel  = model(DBNAME);
+        $dbModel::where('id',input('id'))->setInc('hits');
+        $info = $dbModel::where('id',input('id'))->find();
         $info['pic'] = isset($info['pic'])?$info['pic']:config('view_replace_str.__HOME__')."/images/sample-images/blog-post".mt_rand(1,3).".jpg";
         $info['title_thumb'] = isset($info['thumb']) && $info['thumb'] ?$info['thumb']:config('view_replace_str.__HOME__').'/images/sample-images/blog-post'.mt_rand(1,3).'.jpg';
         $info['title_style'] = isset($info['title_style'])? $info['title_style']:'';
@@ -107,10 +108,11 @@ class EmptyController extends Common{
         }
         $info['time'] = $info['updatetime']?toDate($info['updatetime']):toDate($info['createtime']);
         $this->assign('info',$info);
+
         if($info['template']){
 			$template = $info['template'];
 		}else{
-			$cattemplate = db('category')->where('id',$info['catid'])->value('template_show');
+			$cattemplate = categoryModel::where('id',$info['catid'])->value('template_show');
 			if($cattemplate){
 				$template = $cattemplate;
 			}else{
@@ -123,7 +125,7 @@ class EmptyController extends Common{
     public function donationList(){
         $pageSize = 15;
         $page = input('post.curr');
-        $list=Db::name('donation')->order('addtime desc')->paginate(array('list_rows'=>$pageSize,'page'=>$page))->toArray();
+        $list=donationModel::order('addtime desc')->paginate(array('list_rows'=>$pageSize,'page'=>$page))->toArray();
         return ['code'=>1,'msg'=>'获取成功!','data'=>$list['data'],'count'=>$list['total'],'rel'=>1];
     }
     public function message(){
@@ -132,7 +134,7 @@ class EmptyController extends Common{
             $data = input('post.');
             $data['uid'] = $uid;
             $data['addtime'] = time();
-            Db::name('message')->insert($data);
+            messageModel::insert($data);
             return $result = ['status'=>0,'code'=>1,'msg'=>'留言成功!','url'=>url('user/index/index')];
         }else{
             return $result = ['status'=>0,'code'=>0,'msg'=>'请先登录平台!'];
