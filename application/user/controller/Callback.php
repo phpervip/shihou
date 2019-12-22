@@ -5,7 +5,7 @@ use OauthSDK\Oauth;
 use think\Controller;
 class Callback extends Controller{
     public function qq(){
-        $type = input('type');
+        $type = input('type')?:'qq';
         $code = input('code');
 
         if (!in_array($type, ['qq', 'wechat', 'sina'])) {

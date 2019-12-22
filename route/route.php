@@ -26,5 +26,6 @@ return [
     'senmsg'=>'home/index/senmsg',
     'down/:id'=>'home/index/down',
     'tags/:keyword'=>'home/tags/index',
+    'index/callback/qq'=>'user/callback/qq',
 
 ];
