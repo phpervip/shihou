@@ -14,12 +14,12 @@ class EmptyController extends Common{
     public function index(){
         $dbModel  = model(DBNAME);
         if(ISPAGE==1){
+            echo 1;
             $info = $dbModel::where('id',input('catId'))->find();
             $this->assign('info',$info);
             if($info['template']){
                 $template = $info['template'];
             }else{
-
                 $info['template'] = categoryModel::where('id',$info['id'])->value('template_show');
                 $info['title_style'] = isset($info['title_style'])?$info['title_style']:'';
                 if($info['template']){
@@ -30,6 +30,7 @@ class EmptyController extends Common{
             }
             return $this->fetch($template);
         }else{
+            echo 2;
             if(DBNAME=='picture'){
                 $setup = fieldModel::where(['moduleid'=>3,'field'=>'group'])->value('setup');
                 $setup=is_array($setup) ? $setup: string2array($setup);
@@ -62,6 +63,7 @@ class EmptyController extends Common{
                 }
                 $this->assign('list',$list);
             }else{
+                echo 3;
                 // ' catid = 34 and (status = 1 or (status = 0 and createtime <1577064674))'
                 $list=$dbModel::with('category')
                     ->where($map)
