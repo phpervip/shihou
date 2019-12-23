@@ -4,6 +4,11 @@ use think\Db;
 use clt\Tree;
 use think\facade\Request;
 use think\facade\Env;
+use app\common\Module as moduleModel;
+use app\admin\model\AuthGroup as authGroupModel;
+use app\common\model\Category as categoryModel;
+
+
 class Category extends Common
 {
     protected $dao, $categorys , $module,$groupId;
@@ -139,7 +144,8 @@ class Category extends Common
     public function edit(){
         $id = input('id');
         $this->assign('module',$this->categorys[$id]['moduleid']);
-        $module = db('module')->field('id,title,name')->select();
+        $module = moduleModel::field('id,title,name')->select();
+
         $this->assign('modulelist',$module);
 
         $record = $this->categorys[$id];
@@ -159,7 +165,7 @@ class Category extends Common
         $categorys = $tree->get_tree(0, $str,$pid);
         $this->assign('categorys', $categorys);
         $this->assign('record', $record);
-        $usergroup=db('auth_group')->select();
+        $usergroup = authGroupModel::select();
         $this->assign('rlist',$usergroup);
         $this->assign('title','编辑栏目');
         //模版
@@ -169,7 +175,7 @@ class Category extends Common
     }
     public function catUpdate(){
         $data = $data = Request::except('file');
-        $data['module'] = Db::name('module')->where(array('id'=>$data['moduleid']))->value('name');
+        $data['module'] = moduleModel::where(array('id'=>$data['moduleid']))->value('name');
         if(!empty($data['readgroup'])){
             $data['readgroup'] = implode(',',$_POST['readgroup']);
         }else{
@@ -184,8 +190,7 @@ class Category extends Common
             $result['msg'] = '不能设置自己为自己的父级栏目!';
             return $result;
         }
-
-        if (false !==db('category')->update($data)) {
+        if (false !== categoryModel::update($data)) {
             if($data['child']==1){
                 $arrchildid = $this->get_arrchildid($data['id']);
                 $data2['ismenu'] = $data['ismenu'];
@@ -193,10 +198,10 @@ class Category extends Common
                 if($data['readgroup']!=''){
                     $data2['readgroup'] = $data['readgroup'];
                 }
-                db('category')->where( ' id in ('.$arrchildid.')')->update($data2);
+                categoryModel::where( ' id in ('.$arrchildid.')')->update($data2);
             }
             $this->repair();
-            $this->repair();
+            // $this->repair();
             savecache('Category');
             $result['msg'] = '栏目修改成功!';
             cache('cate', NULL);
@@ -214,7 +219,7 @@ class Category extends Common
     public function repair() {
         @set_time_limit(500);
         $this->categorys = $categorys = array();
-        $categorys =  db('category')->where("pid=0")->order('sort ASC,id ASC')->select();
+        $categorys =  categoryModel::where("pid=0")->order('sort ASC,id ASC')->select();
         $this->set_categorys($categorys);
         if(is_array($this->categorys)) {
             foreach($this->categorys as $id => $cat) {
@@ -222,7 +227,7 @@ class Category extends Common
                 $this->categorys[$id]['arrparentid'] = $arrparentid = $this->get_arrparentid($id);
                 $this->categorys[$id]['arrchildid'] = $arrchildid = $this->get_arrchildid($id);
                 $this->categorys[$id]['parentdir'] = $parentdir = $this->get_parentdir($id);
-                db('category')->update(array('parentdir'=>$parentdir,'arrparentid'=>$arrparentid,'arrchildid'=>$arrchildid,'id'=>$id));
+                categoryModel::update(array('parentdir'=>$parentdir,'arrparentid'=>$arrparentid,'arrchildid'=>$arrchildid,'id'=>$id));
             }
         }
 
@@ -231,7 +236,7 @@ class Category extends Common
         if (is_array($categorys) && !empty($categorys)) {
             foreach ($categorys as $id => $c) {
                 $this->categorys[$c['id']] = $c;
-                $r = db('category')->where(array("pid"=>$c['id']))->Order('sort ASC,id ASC')->select();
+                $r = categoryModel::where(array("pid"=>$c['id']))->Order('sort ASC,id ASC')->select();
                 $this->set_categorys($r);
             }
         }

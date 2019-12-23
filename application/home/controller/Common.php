@@ -62,8 +62,6 @@ class Common extends Controller
             $this->assign('pid',$thisCat['pid']);
         }
 
-
-
         // 获取缓存数据
         $cate = cache('cate');
         if(!$cate){
@@ -74,16 +72,12 @@ class Common extends Controller
             cache('cate', $cate, 3600);
         }
         $this->assign('category',$cate);
-
-
-
         //友情链接
         $linkList = cache('linkList');
         if(!$linkList){
             $linkList = linkModel::where('open',1)->order('sort asc')->select();
             cache('linkList', $linkList, 3600);
         }
-
 
         $this->assign('linkList', $linkList);
         //畅言
