@@ -13,11 +13,11 @@
     <!-- Page Contents -->
     <div class="animated fadein">
         <!-- Slider -->
-        <div class="swiper-container swiper-slider">
+        <div class="swiper-container swiper-slider" style="top:50px;">
             <div class="swiper-wrapper">
                 {volist name="adList" id="vo" key="i"}
                 <div class="swiper-slide">
-                    <img src="{$vo.pic}" alt="">
+                    <img src="__WEBURL__{$vo.pic}" alt="">
                     <div class="opacity-overlay"></div>
                     <div class="bottom center">
                         <h4 class="white-text m-0"><strong>{$vo.title}</strong></h4>
@@ -36,7 +36,7 @@
         <div class="section center">
             <a href="{:url('mobile/'.$vo['catdir'].'/info',array('id'=>$vo['id'],'catId'=>$vo['catid']))}">
                 <img src="{:imgUrl($vo['thumb'],'/static/mobile/img/'.$k.'.jpg')}" alt="{$vo.title}" class="fade" />
-                <h2 class="heading">{$vo.title}</h2>
+                <h2 class="heading" style="margin-top:10px;">{$vo.title}</h2>
                 <p>{$vo.description|raw}</p>
             </a>
         </div>
@@ -62,9 +62,10 @@
         <!-- Newsletter -->
         <div class="section center">
             <h2 class="heading">你准备好与BEAUTY共同打造您的网络平台了吗？</h2>
-            <p>BEAUTY建站系统免费下载，只有您的支持，才能使得我们在开源的世界里走的更好！</p>
+            <p>BEAUTY，愿与您友好合作，共同打造美好未来！</p>
             <div class="newsletter">
-                <a class="waves-effect waves-light btn primary-color" href="##">点击下载</a>
+                <a class="waves-effect waves-light btn primary-color" href="https://github.com/phpervip/beauty2.git
+">点击下载</a>
             </div>
         </div>
 

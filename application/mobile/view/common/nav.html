@@ -31,12 +31,12 @@
         <div class="collapsible-body">
             <ul class="collapsible">
                 {volist name="$vo.sub" id="v"}
-                <li><a href="{:url('mobile/'.$vo['catdir'].'/index',['catId'=>$v['id']] )}" title="{$v.catname}-CLTPHP内容管理系统">{$v.catname}</a></li>
+                <li><a href="{:url('mobile/'.$vo['catdir'].'/index',['catId'=>$v['id']] )}" title="{$v.catname}-BEAUTY系统">{$v.catname}</a></li>
                 {/volist}
             </ul>
         </div>
         {else /}
-        <a href="{:url('mobile/'.$vo['catdir'].'/index',['catId'=>$vo['id']] )}" title="{$vo.catname}-CLTPHP内容管理系统">{$vo.catname}</a>
+        <a href="{:url('mobile/'.$vo['catdir'].'/index',['catId'=>$vo['id']] )}" title="{$vo.catname}-BEAUTY系统">{$vo.catname}</a>
         {/if}
     </li>
     {/volist}
