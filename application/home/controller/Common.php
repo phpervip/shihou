@@ -37,8 +37,10 @@ class Common extends Controller
         define('MODULE_NAME',strtolower($controller));
         define('ACTION_NAME',strtolower($action));
 
+
         //导航
         $thisCat = categoryModel::where('id',input('catId'))->find();
+
         $this->assign('title',$thisCat['title']);
         $this->assign('keywords',$thisCat['keywords']);
         $this->assign('description',$thisCat['description']);
@@ -52,7 +54,6 @@ class Common extends Controller
             define('ISPAGE',1);
         }
         $this->pagesize = $thisCat['pagesize']>0 ? $thisCat['pagesize'] : '';
-
         if($thisCat['pid'] ==0){
             $this->assign('pid',input('catId'));
             $this->assign('ptitle',$thisCat['title']);
@@ -60,6 +61,8 @@ class Common extends Controller
             $this->assign('ptitle',categoryModel::where('id',$thisCat['pid'])->value('title'));
             $this->assign('pid',$thisCat['pid']);
         }
+
+
 
         // 获取缓存数据
         $cate = cache('cate');
@@ -72,12 +75,16 @@ class Common extends Controller
         }
         $this->assign('category',$cate);
 
+
+
         //友情链接
         $linkList = cache('linkList');
         if(!$linkList){
             $linkList = linkModel::where('open',1)->order('sort asc')->select();
             cache('linkList', $linkList, 3600);
         }
+
+
         $this->assign('linkList', $linkList);
         //畅言
         $plugin = pluginModel::where(['code'=>'changyan'])->find();
